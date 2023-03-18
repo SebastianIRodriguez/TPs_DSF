@@ -47,3 +47,18 @@ hold on;
 title('Solucion analitica');
 plot(t,x(1,:),t,x(2,:));
 legend('il vs t','uc vs t');
+
+%% Ej 4 Metodo de Heun
+% Repetir el Problema 3 utilizando ahora el metodo de Heun, que puede 
+% implementarse mediante el Codigo 4. Utilizar en este caso pasos de
+% integracion h = 10^?4, h = 2*10^?5 y h = 10^?5.
+% Analizar la estabilidad y como cambia el error tras un paso al variar h.
+
+[t1, x1] = heun(@buck_converter,x0,1*(10^-4),0,0.1);
+
+[t2, x2] = heun(@buck_converter,x0,2*(10^-5),0,0.1);
+
+[t3, x3] = heun(@buck_converter,x0,1*(10^-5),0,0.1);
+
+plot(t1,x1,t2,x2,t3,x3);
+
