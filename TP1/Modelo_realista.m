@@ -18,3 +18,9 @@ B=[-1;0];
 
 lambda=eig(A);
 
+%% 4. Determinar el m´aximo paso de integracion que podria utilizarse 
+% para simular este sistema con el metodo de Forward Euler.
+
+% Formula Estabilidad: hmin < - 2 / lambda_min (mas rápido)
+
+hmin = - 2 / min(lambda) % 2e-8

@@ -39,7 +39,7 @@ legend('il vs t','uc vs t');
 lambda = eig(A)
 % p1,2 = -50 +- 998.7492
 
-%% Ej 3 Foward Euler
+%% Ej 3 Forward Euler
 
 [t,x]=feuler(@buck_converter,x0,1e-5,0,0.01);
 figure(2);
@@ -63,12 +63,14 @@ legend('il vs t','uc vs t');
 
 [t3, x3] = heun(@buck_converter,x0,1e-5,0,0.1);
 
+figure(3);
 plot(t1,x1,'r',t2,x2,'g',t3,x3,'b');
+title('Metodo de Heun');
 
 %% Errores
-e1 = norm(x1(:,2)-xa(:,2))
-e2 = norm(x2(:,2)-xa(:,2))
-e3 = norm(x3(:,2)-xa(:,2))
+e1 = norm(x1(:,2)-xa(:,2)) %~1.1e+0
+e2 = norm(x2(:,2)-xa(:,2)) %~1.2e-1
+e3 = norm(x3(:,2)-xa(:,2)) %~2.0e-6
 %% Estabilidad
 % El Metodo de Heun es estable siempre que h < 2*abs(lambda)
 % Se inestabiliza con valores de h > 0.0008
@@ -87,23 +89,29 @@ plot(t,x);
 
 n_pasos1 = length(t1)
 
+figure(4);
 subplot(2,1,1), plot(t1,x1);
+title('Metodo de Runge-Kutta - rtol = 1e-3 - atol = 1e-6');
 subplot(2,1,2), plot(diff(t1));
 
 %% 2. Repetir el punto anterior para tolerancias relativa y absoluta
-% rtol = atol = 10?6.
+% rtol = atol = 1e-6.
 
 [t2, x2] = rk23(@buck_converter, x0, 0, 0.1, 1e-6, 1e-6);
 
 n_pasos2 = length(t2)
 
+figure(5);
 subplot(2,1,1), plot(t2,x2);
+title('Metodo de Runge-Kutta - rtol = atol = 1e-6');
 subplot(2,1,2), plot(diff(t2));
 
 %% Comparacion
 
+figure(6);
 subplot(2,1,1),
 plot(t1, x1, 'r', t2, x2, 'b'),
+title('Metodo de Runge-Kutta - Comparacion'),
 legend('rtol = 10^-3, atol = 10^-6', '', 'rtol = atol = 10^-6', '');
 
 subplot(2,1,2),
@@ -119,7 +127,7 @@ legend('rtol = 10^-3, atol = 10^-6', 'rtol = atol = 10^-6');
 
 
 %% Ej 6 Simulacion del Modelo Conmutado
-% Consideraremos ahora que la llave conmuta con un periodo de T = 10?4 seg
+% Consideraremos ahora que la llave conmuta con un periodo de T = 1e-4 seg
 % y que el ciclo de trabajo es del 50 %.
 % Para simular el modelo bajo esta suposicion, se pide lo siguiente:
 
@@ -131,26 +139,30 @@ legend('rtol = 10^-3, atol = 10^-6', 'rtol = atol = 10^-6');
 
 %% 2.
 % Simular este nuevo sistema usando el metodo de Heun con los siguientes
-% pasos de integracion: h = 2e?5, h = 1e?5 y h = 1e?6.
+% pasos de integracion: h = 2e-5, h = 1e-5 y h = 1e-6.
 % Explicar lo que observa.
 
-[t1, x1] = heun(@buck1,x0,2e-5,0,0.2);
+[t1, x1] = heun(@buck1,x0,2e-5,0,0.004);
 
-[t2, x2] = heun(@buck1,x0,1e-5,0,0.2);
+[t2, x2] = heun(@buck1,x0,1e-5,0,0.004);
 
-[t3, x3] = heun(@buck1,x0,1e-6,0,0.2);
+[t3, x3] = heun(@buck1,x0,1e-6,0,0.004);
 
+figure(7);
 plot(t1,x1,'r',t2,x2,'g',t3,x3,'b');
+title('Comparacion Heun - Modelo Conmutado')
 legend('h = 2e-5', '', 'h = 1e-5', '', 'h = 1e-6')
 
 %% 3.
-% Simular utilizando RK23 con tolerancias relativa y absoluta rtol = 10?3 
-% y atol = 10?6.
+% Simular utilizando RK23 con tolerancias relativa y absoluta rtol = 1e-3 
+% y atol = 1e-6.
 % Graficar los resultados y la evolucion del paso de integracion.
 
-[t, x] = rk23(@buck1, x0, 0, 0.1, 1e-3, 1e-6);
+[t, x] = rk23(@buck1, x0, 0, 0.004, 1e-3, 1e-6);
 
-subplot(2,1,1), plot(t,x);
+figure(8);
+subplot(2,1,1), plot(t,x), legend('il', 'uc');
+title('Runge-Kutta - Modelo Conmutado')
 subplot(2,1,2), plot(diff(t));
 
 %% 4.
@@ -160,9 +172,14 @@ subplot(2,1,2), plot(diff(t));
 %% 5.
 % Observar la corriente iSD(t), o su alias iL(t), y analizar que ocurre 
 % con la corriente por el diodo mientras la llave se encuentra abierta
-% para tiempos entre t = 3e?4 y t = 6e?4.
+% para tiempos entre t = 3e-4 y t = 6e-4.
 % ¿Hay algun problema con las hipotesis simplificatorias que se hicieron
 % para llegar a la Ec.(1)?
+
+% Se observa que en ese periodo de tiempo, la corriente iSD es negativa, lo
+% lo cual no es coherente debido a la presencia del diodo, que fuerza a que
+% la corriente pueda adoptar un unico sentido de circulacion.
+% Este comportamiento no se modela en la Ec. (1)
 
 
 
