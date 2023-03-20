@@ -18,81 +18,100 @@ B=[-1;0];
 
 lambda=eig(A);
 
-%% 5. Simular el modelo utilizando Backward Euler con pasos de 
-% integración h = 2 10?5 , h = 10?5 y h = 10?6
+%% 4. Determinar el maximo paso de integracion que podria utilizarse 
+% para simular este sistema con el metodo de Forward Euler.
+
+% Formula Estabilidad: hmin < - 2 / lambda_min (mas rapido)
+
+hmin = - 2 / min(lambda) % 2e-8
+
+%% ***************************** EJ 8 ************************************
+
+
+
+%% 3. Observar que ocurre al simular este modelo con el metodo de 
+% Forward Euler o con el metodo de Heun
+
 x0=[0;0];
 
 tic;
-[t,x]=feuler(@buck2,x0,1e-5,0,0.01);
-tiempo_1 = toc;
-
-figure(5);
-plot(t,x(1,:),t,x(2,:));
-title('Simulación con backward Euler y paso de 1e-5');
-legend('il vs t','uc vs t');
-grid on;
-
-
-tic;
 [t,x]=feuler(@buck2,x0,1e-6,0,0.01);
-tiempo_2 = toc;
+tiempo_1 = toc;
 
 figure(6);
 plot(t,x(1,:),t,x(2,:));
-title('Simulación con backward Euler y paso de 1e-6');
+title('Simulacion con foward Euler y paso de 1e-6');
 legend('il vs t','uc vs t');
 grid on;
 
 
 tic;
 [t,x]=feuler(@buck2,x0,1e-7,0,0.01);
+tiempo_2=toc;
+
+figure(7);
+plot(t,x(1,:),t,x(2,:))
+title('Simulacion con foward Euler y paso de 1e-7');
+legend('il vs t','uc vs t');
+grid on;
+
+
+tic;
+[t,x]=feuler(@buck2,x0,1e-8,0,0.01);
 tiempo_3=toc;
 
 figure(7);
 plot(t,x(1,:),t,x(2,:))
-title('Simulación con backward Euler y paso de 1e-7');
+title('Simulacion con foward Euler y paso de 1e-8');
 legend('il vs t','uc vs t');
 grid on;
 
-%%
+%% 4. Observar que ocurre con RK23.
+tic;
+[t,x]=rk23(@buck2,x0,0,0.01,1e-3,1e-6);
+tiempo_4=toc;
+
+figure(8);
+plot(t,x(1,:),t,x(2,:))
+title('Simulacion con RK23');
+legend('il vs t','uc vs t');
+grid on;
+
+%% 5. Simular el modelo utilizando Backward Euler con pasos de 
+% integracion h = 2 10e-5 , h = 10e-5 y h = 10e-6
 
 x0=[0;0];
 
 tic;
-[t,x]=beuler(@buck2,x0,1e-5,0,0.01);
-tiempo_1 = toc;
+[t,x]=beuler(@buck2,x0,2e-5,0,0.01);
+tiempo_5 = toc;
 
-figure(5);
+figure(9);
 plot(t,x(1,:),t,x(2,:));
-title('Simulación con backward Euler y paso de 1e-5');
+title('Simulacion con backward Euler y paso de 2e-5');
+legend('il vs t','uc vs t');
+grid on;
+
+
+tic;
+[t,x]=beuler(@buck2,x0,1e-5,0,0.01);
+tiempo_6 = toc;
+
+figure(10);
+plot(t,x(1,:),t,x(2,:));
+title('Simulacion con backward Euler y paso de 1e-5');
 legend('il vs t','uc vs t');
 grid on;
 
 
 tic;
 [t,x]=beuler(@buck2,x0,1e-6,0,0.01);
-tiempo_2 = toc;
+tiempo_7=toc;
 
-figure(6);
-plot(t,x(1,:),t,x(2,:));
-title('Simulación con backward Euler y paso de 1e-6');
-legend('il vs t','uc vs t');
-grid on;
-
-
-tic;
-[t,x]=beuler(@buck2,x0,1e-7,0,0.01);
-tiempo_3=toc;
-
-figure(7);
+figure(11);
 plot(t,x(1,:),t,x(2,:))
-title('Simulación con backward Euler y paso de 1e-7');
+title('Simulacion con backward Euler y paso de 1e-6');
 legend('il vs t','uc vs t');
 grid on;
 
-%% 4. Determinar el m´aximo paso de integracion que podria utilizarse 
-% para simular este sistema con el metodo de Forward Euler.
 
-% Formula Estabilidad: hmin < - 2 / lambda_min (mas rápido)
-
-hmin = - 2 / min(lambda) % 2e-8
