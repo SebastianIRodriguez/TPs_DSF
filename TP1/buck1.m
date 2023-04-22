@@ -9,8 +9,8 @@ function dx=buck1(x,t)
     end
 
     %parametros
-    L=10e-4;
-    C=10e-4;
+    L=1e-4;
+    C=1e-4;
     R=10;
 
     % Entrada

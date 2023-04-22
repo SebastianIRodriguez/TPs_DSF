@@ -15,8 +15,8 @@ duc=(il-uc/R)/C;
 % 1. Escribir las Ecuaciones de Estado obtenidas en el item 3 del 
 % Problema 1 en forma matricial
 U=12;
-L=10e-4;
-C=10e-4;
+L=1e-4;
+C=1e-4;
 R=10;
 
 A=[0 -1/L;1/C -1/(R*C)];
@@ -41,15 +41,27 @@ lambda = eig(A)
 
 %% Ej 3 Forward Euler
 
+[t,xa]=solan(1e-5,0.01);
 [t,x]=feuler(@buck_converter,x0,1e-5,0,0.01);
 figure(2);
 grid on;
 hold on;
-% Top plot
-%subplot(2,1,1);
-title('Solucion analitica');
+title('Simulacion por forward Euler con paso de 1e-5');
 plot(t,x(1,:),t,x(2,:));
 legend('il vs t','uc vs t');
+error_1=norm(x(:,2)-xa(:,2));
+
+
+%% con paso 1e-6
+[t,xa]=solan(1e-6,0.01);
+[t,x]=feuler(@buck_converter,x0,1e-6,0,0.01);
+figure(3);
+grid on;
+hold on;
+title('Simulacion por forward Euler con paso de 1e-6');
+plot(t,x(1,:),t,x(2,:));
+legend('il vs t','uc vs t');
+error_2=norm(x(:,2)-xa(:,2));
 
 %% Ej 4 Metodo de Heun
 % Repetir el Problema 3 utilizando ahora el metodo de Heun, que puede 
@@ -57,26 +69,26 @@ legend('il vs t','uc vs t');
 % integracion h = 10^?4, h = 2*10^?5 y h = 10^?5.
 % Analizar la estabilidad y como cambia el error tras un paso al variar h.
 
-[t1, x1] = heun(@buck_converter,x0,1e-4,0,0.1);
+[t1, x1] = heun(@buck_converter,x0,1e-4,0,0.01); %% 8 se va
 
-[t2, x2] = heun(@buck_converter,x0,2e-5,0,0.1);
+[t2, x2] = heun(@buck_converter,x0,2e-5,0,0.01);
 
-[t3, x3] = heun(@buck_converter,x0,1e-5,0,0.1);
+[t3, x3] = heun(@buck_converter,x0,1e-5,0,0.01);
 
-figure(3);
+figure(4);
 plot(t1,x1,'r',t2,x2,'g',t3,x3,'b');
 title('Metodo de Heun');
+grid on;
 
 %% Errores
-e1 = norm(x1(:,2)-xa(:,2)) %~1.1e+0
-e2 = norm(x2(:,2)-xa(:,2)) %~1.2e-1
-e3 = norm(x3(:,2)-xa(:,2)) %~2.0e-6
-%% Estabilidad
-% El Metodo de Heun es estable siempre que h < 2*abs(lambda)
-% Se inestabiliza con valores de h > 0.0008
-hmax = 2/abs(lambda(1))
-[t, x] = heun(@buck_converter,x0,8e-4,0,1);
-plot(t,x);
+[t,xa]=solan(1e-4,0.01);
+e1 = norm(x1(:,2)-xa(:,2)); 
+
+[t,xa]=solan(2e-5,0.01);
+e2 = norm(x2(:,2)-xa(:,2)); 
+
+[t,xa]=solan(1e-5,0.01);
+e3 = norm(x3(:,2)-xa(:,2)); 
 
 %% Ej 5 Metodo de Runge Kutta con Control de Paso
 % Simular el modelo utilizando ahora un metodo de RK23 de paso variable,
@@ -85,26 +97,28 @@ plot(t,x);
 %% 1. Utilizar tolerancias relativa y absoluta rtol = 10?3, atol = 10?6.
 % Graficar los resultados y calcular numero de pasos del metodo (length(t)).
 % Graficar tambien el tamano del paso h (plot(diff(t))).
-[t1, x1] = rk23(@buck_converter, x0, 0, 0.1, 1e-3, 1e-6);
+[t1, x1] = rk23(@buck_converter, x0, 0, 0.01, 1e-3, 1e-6);
 
-n_pasos1 = length(t1)
+n_pasos1 = length(t1);
 
-figure(4);
+figure(5);
 subplot(2,1,1), plot(t1,x1);
 title('Metodo de Runge-Kutta - rtol = 1e-3 - atol = 1e-6');
 subplot(2,1,2), plot(diff(t1));
+grid on;
 
 %% 2. Repetir el punto anterior para tolerancias relativa y absoluta
 % rtol = atol = 1e-6.
 
-[t2, x2] = rk23(@buck_converter, x0, 0, 0.1, 1e-6, 1e-6);
+[t2, x2] = rk23(@buck_converter, x0, 0, 0.01, 1e-6, 1e-6);
 
 n_pasos2 = length(t2)
 
-figure(5);
+figure(6);
 subplot(2,1,1), plot(t2,x2);
 title('Metodo de Runge-Kutta - rtol = atol = 1e-6');
 subplot(2,1,2), plot(diff(t2));
+grid on;
 
 %% Comparacion
 
@@ -123,7 +137,6 @@ legend('rtol = 10^-3, atol = 10^-6', 'rtol = atol = 10^-6');
 % En el primer caso, los pasos son mucho mayores y aumentan mucho mas
 % rapido.
 % En ambos casos, a medida que la oscilacion se reduce, el paso aumenta.
-
 
 
 %% Ej 6 Simulacion del Modelo Conmutado
@@ -158,7 +171,7 @@ legend('h = 2e-5', '', 'h = 1e-5', '', 'h = 1e-6')
 % y atol = 1e-6.
 % Graficar los resultados y la evolucion del paso de integracion.
 
-[t, x] = rk23(@buck1, x0, 0, 0.004, 1e-3, 1e-6);
+[t, x] = rk23(@buck1, x0, 0, 0.01, 1e-3, 1e-6);
 
 figure(8);
 subplot(2,1,1), plot(t,x), legend('il', 'uc');

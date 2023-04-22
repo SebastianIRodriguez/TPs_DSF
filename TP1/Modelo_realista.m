@@ -2,7 +2,7 @@
 
 Roff = 1e5;
 Ron = 1e-5;
-U = 12; L = 10e-4; C = 10e-4; R = 10;
+U = 12; L = 1e-4; C = 1e-4; R = 10;
 
 %x1=il, x2= uc
 %% 2. Escribir las Ecuaciones de Estado obtenidas en forma matricial para el caso s = 0 (llave abierta,
@@ -13,7 +13,7 @@ Rd = Roff;
 A=[-Rs/L -1*Rs/(R*L);-1/C -1/(R*C)];
 B=[-1;0];
 
-%% 3. Calcular la posición de los autovalores de la matriz A suponiendo que los nuevos parámetros son
+%% 3. Calcular la posicion de los autovalores de la matriz A suponiendo que los nuevos parámetros son
 % Ron = 10?5? y Roff = 105?.
 
 lambda=eig(A);
@@ -23,7 +23,7 @@ lambda=eig(A);
 
 % Formula Estabilidad: hmin < - 2 / lambda_min (mas rapido)
 
-hmin = - 2 / min(lambda) % 2e-8
+hmin = - 2 / min(lambda) % 2e-9
 
 %% ***************************** EJ 8 ************************************
 
@@ -38,7 +38,7 @@ tic;
 [t,x]=feuler(@buck2,x0,1e-6,0,0.01);
 tiempo_1 = toc;
 
-figure(6);
+figure(9);
 plot(t,x(1,:),t,x(2,:));
 title('Simulacion con foward Euler y paso de 1e-6');
 legend('il vs t','uc vs t');
@@ -49,7 +49,7 @@ tic;
 [t,x]=feuler(@buck2,x0,1e-7,0,0.01);
 tiempo_2=toc;
 
-figure(7);
+figure(10);
 plot(t,x(1,:),t,x(2,:))
 title('Simulacion con foward Euler y paso de 1e-7');
 legend('il vs t','uc vs t');
@@ -60,7 +60,7 @@ tic;
 [t,x]=feuler(@buck2,x0,1e-8,0,0.01);
 tiempo_3=toc;
 
-figure(7);
+figure(11);
 plot(t,x(1,:),t,x(2,:))
 title('Simulacion con foward Euler y paso de 1e-8');
 legend('il vs t','uc vs t');
@@ -71,7 +71,7 @@ tic;
 [t,x]=rk23(@buck2,x0,0,0.01,1e-3,1e-6);
 tiempo_4=toc;
 
-figure(8);
+figure(12);
 plot(t,x(1,:),t,x(2,:))
 title('Simulacion con RK23');
 legend('il vs t','uc vs t');
@@ -86,7 +86,7 @@ tic;
 [t,x]=beuler(@buck2,x0,2e-5,0,0.01);
 tiempo_5 = toc;
 
-figure(9);
+figure(13);
 plot(t,x(1,:),t,x(2,:));
 title('Simulacion con backward Euler y paso de 2e-5');
 legend('il vs t','uc vs t');
@@ -97,7 +97,7 @@ tic;
 [t,x]=beuler(@buck2,x0,1e-5,0,0.01);
 tiempo_6 = toc;
 
-figure(10);
+figure(14);
 plot(t,x(1,:),t,x(2,:));
 title('Simulacion con backward Euler y paso de 1e-5');
 legend('il vs t','uc vs t');
@@ -108,7 +108,7 @@ tic;
 [t,x]=beuler(@buck2,x0,1e-6,0,0.01);
 tiempo_7=toc;
 
-figure(11);
+figure(15);
 plot(t,x(1,:),t,x(2,:))
 title('Simulacion con backward Euler y paso de 1e-6');
 legend('il vs t','uc vs t');
